@@ -8,12 +8,17 @@ var path = require('path');
 
 module.exports = WebpackRun;
 
+/*
+ * _path：要编译的文件夹路径
+ * config_path：webpack的配置文件路径
+ * */
 function WebpackRun(_path, config_path) {
-    this.config_path = config_path || '';
-    this.env = WebpackRun.Env.watch;
     this._path = _path.replace(/\\/g, '/');
+    this.config_path = config_path || '';
+
     this.removeFile = [];
     this.prefix = 'bl';
+    this.env = WebpackRun.Env.watch;
 }
 
 WebpackRun.Env = {
@@ -54,7 +59,7 @@ WebpackRun.prototype.do = function (callback) {
     /*判断webpack.config.js文件*/
     self.config_path = self.config_path ? self.config_path : path.join(basePath, 'webpack.config.js');
 
-    if ((!fs.exists(self.config_path))) {
+    if ((!fs.existsSync(self.config_path))) {
         return callback(new Error('未找到webpack的配置文件'));
     }
 
