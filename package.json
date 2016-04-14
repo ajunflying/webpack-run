@@ -1,0 +1,22 @@
+{
+  "name": "webpack-run",
+  "version": "1.0.0",
+  "description": "webpack run",
+  "main": "index.js",
+  "scripts": {
+    "start": "index.js"
+  },
+  "author": "sunjunping@nicaifu.com",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.1.2"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "https://git.coding.net/ajun/webpack-run.git"
+  },
+  "keywords": [
+    "webpack-run"
+  ]
+}
