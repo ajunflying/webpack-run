@@ -59,7 +59,7 @@ WebpackRun.prototype.do = function (callback) {
     /*判断webpack.config.js文件*/
     self.config_path = self.config_path ? self.config_path : path.join(basePath, 'webpack.config.js');
 
-    if ((!fs.existsSync(self.config_path))) {
+    if (!fs.existsSync(self.config_path)) {
         return callback(new Error('未找到webpack的配置文件'));
     }
 
