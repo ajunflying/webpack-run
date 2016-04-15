@@ -13,7 +13,8 @@ module.exports = WebpackRun;
  * config_path：webpack的配置文件路径
  * */
 function WebpackRun(_path, config_path) {
-    this._path = _path.replace(/\\/g, '/');
+    this.relative_path = _path;
+    this._path = path.join(__dirname, _path).replace(/\\/g, '/');
     this.config_path = config_path || '';
 
     this.removeFile = [];
@@ -52,9 +53,12 @@ WebpackRun.prototype.do = function (callback) {
         return callback(new Error('必须设置路径 完成路径 如: d:/work/dev/page'));
     }
 
-    let pathList = self._path.split('/');
-    let dirname = pathList[pathList.length - 1];
-    let basePath = pathList.slice(0, pathList.length - 1).join('/');
+    let pathList = self._path.split('/'),
+        dirname = pathList[pathList.length - 1],// 获取入口文件夹
+        pathArr = self.relative_path.split('/'),
+        arr1 = pathArr[0]||'',
+        pathArrLen = arr1 == '.' ? (pathArr.length-1) : pathArr.length,
+        basePath = pathList.slice(0, pathList.length - pathArrLen).join('/');
 
     /*判断webpack.config.js文件*/
     self.config_path = self.config_path ? self.config_path : path.join(basePath, 'webpack.config.js');
