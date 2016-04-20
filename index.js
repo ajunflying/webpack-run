@@ -9,11 +9,13 @@ var path = require('path');
 module.exports = WebpackRun;
 
 /*
- * _path：要编译的文件夹路径
- * config_path：webpack的配置文件路径
+ * _path：要编译的文件夹路径，如：/fedev/page
+ * config_path：webpack的配置文件路径，如：path.join(__dirname, 'webpack.config.js')，这个一定要绝对路径
  * */
 function WebpackRun(_path, config_path) {
-    this._path = _path.replace(/\\/g, '/');
+    this.relative_path = process.cwd();
+    this._path = path.join(this.relative_path, _path).replace(/\\/g, '/');
+
     this.config_path = config_path || '';
 
     this.removeFile = [];
@@ -52,17 +54,17 @@ WebpackRun.prototype.do = function (callback) {
         return callback(new Error('必须设置路径 完成路径 如: d:/work/dev/page'));
     }
 
-    let pathList = self._path.split('/');
-    let dirname = pathList[pathList.length - 1];
-    let basePath = pathList.slice(0, pathList.length - 1).join('/');
+    let pathList = self._path.split('/'),
+        dirname = pathList[pathList.length - 1];// 获取入口文件夹
 
     /*判断webpack.config.js文件*/
-    self.config_path = self.config_path ? self.config_path : path.join(basePath, 'webpack.config.js');
+    self.config_path = self.config_path ? self.config_path : path.join(self._path, 'webpack.config.js');
+    self.config_path = self.config_path.replace(/\\/g, '/');
+    let replacePath = self.config_path.replace('/webpack.config.js', '');
 
     if (!fs.existsSync(self.config_path)) {
         return callback(new Error('未找到webpack的配置文件'));
     }
-
     readDir(self._path, function (error, _list) {
         if (error) {
             return callback(error);
@@ -94,11 +96,11 @@ WebpackRun.prototype.do = function (callback) {
             } else {
                 _key = _key[0];
             }
-            obj[_key] = item.replace(basePath, '.');
+            obj[_key] = item.replace(replacePath, '.');
         });
 
         /*生成新文件*/
-        fs.writeFileSync(path.join(basePath, 'webpack.config.entry.js'), 'module.exports = ' + JSON.stringify(obj));
+        fs.writeFileSync(path.join(self.config_path.replace('webpack.config.js', ''), 'webpack.config.entry.js'), 'module.exports = ' + JSON.stringify(obj));
         /*生成新文件*/
 
         console.log('webpack entry生成完成，若是有疑问可以查看webpack.config.entry.js文件，看看生成的entry对象是否正确\r\n'.info);
