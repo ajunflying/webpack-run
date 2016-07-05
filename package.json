@@ -6,7 +6,7 @@
   "scripts": {
     "start": "index.js"
   },
-  "author": "sunjunping@nicaifu.com",
+  "author": "sunjunping",
   "license": "MIT",
   "dependencies": {
     "colors": "^1.1.2"
